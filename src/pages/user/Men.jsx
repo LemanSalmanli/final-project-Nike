@@ -2,17 +2,17 @@ import { useRef } from "react"
 
 
 function Men() {
-        const scrollRef1 = useRef(null)
-        const scrollRef2 = useRef(null)
+    const scrollRef1 = useRef(null)
+    const scrollRef2 = useRef(null)
 
-        const slideScroll = (ref, offset) => {
-            if (ref.current) {
-                ref.current.scrollBy({
-                    left: offset,
-                    behavior: 'smooth',
-                })
-            }
+    const slideScroll = (ref, offset) => {
+        if (ref.current) {
+            ref.current.scrollBy({
+                left: offset,
+                behavior: 'smooth',
+            })
         }
+    }
 
     return (
         <div>

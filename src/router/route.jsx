@@ -10,6 +10,8 @@ import Product from "../pages/admin/Product";
 import Auth from "./Auth";
 import UserLayout from "../layouts/UserLayout";
 import Men from "../pages/user/Men";
+import Women from "../pages/user/Women";
+import Kids from "../pages/user/Kids";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -18,6 +20,8 @@ export const router = createBrowserRouter(
                 <Route index element={<Home />} />
                 <Route path="retail" element={<Retail />} />
                 <Route path="men" element={<Men />} />
+                <Route path="women" element={<Women />} />
+                <Route path="kids" element={<Kids />} />
             </Route>
             
             <Route path="/login" element={<Login />} />
@@ -27,7 +31,7 @@ export const router = createBrowserRouter(
                     <AdminLayout />
                 </Auth>
             }>
-                <Route path="category" element={<Category />} />
+                <Route path="category"  element={<Category />} />
                 <Route path="brand" element={<Brand />} />
                 <Route path="product" element={<Product />} />
             </Route>
