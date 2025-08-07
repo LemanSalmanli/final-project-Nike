@@ -1,0 +1,14 @@
+import { Outlet } from "react-router"
+import Home from "./pages/user/Home"
+
+
+function App() {
+
+  return (
+    <>
+      <Home />
+    </>
+  )
+}
+
+export default App
