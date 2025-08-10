@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react"
 
 const validationSchema = Yup.object({
     name: Yup.string().min(3, 'Too short').max(100, 'Too long').required('Required'),
-    description: Yup.string().min(2, 'Too short').max(300, 'Too long').required('Required'),
+    description: Yup.string().min(2, 'Too short').max(600, 'Too long').required('Required'),
     price: Yup.number().required('Required'),
     stock: Yup.number().required('Required'),
     brandId: Yup.number().required('Required'),
@@ -16,12 +16,8 @@ const validationSchema = Yup.object({
     colors: Yup.string().test('is-valid-colors', 'Enter at least one color (comma separated)',
       (value) => value && value.trim().length > 0
     ),
-    
-    sizes: Yup.string()
-        .test(
-            'is-valid-sizes',
-            'Enter at least one size (comma separated)',
-            (value) => value && value.trim().length > 0
+    sizes: Yup.string().test('is-valid-sizes','Enter at least one size (comma separated)',
+        (value) => value && value.trim().length > 0
     ),
     
 })
@@ -46,8 +42,6 @@ function AddProduct({open, setOpen}) {
     }
 
    const handleSaveProduct = async (values, { resetForm }) => {
-    console.log('Submitting form with values:', values)
-    console.log('Selected image files:', imageFiles)
 
         if (imageFiles.length === 0) {
             toast.error('At least one image is required')

@@ -13,3 +13,6 @@
 .group-hover-scrollbar::-webkit-scrollbar {
   display: block !important;
 }
+*{
+  font-family: Arial, Helvetica, sans-serif;
+}

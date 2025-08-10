@@ -11,7 +11,7 @@ export const nikeApi = createApi({
             if (token) {
                 headers.set('authorization', `Bearer ${token}`);
             }
-            return headers;
+            return headers
         }
     }),
     tagTypes: ['Category', 'Brand', 'Product', 'Image'],
@@ -30,7 +30,6 @@ export const nikeApi = createApi({
                 body: { name, slug, parentId }
             }),
             invalidatesTags: ['Category']
-
         }),
         getAllCategories: builder.query({
             query: () => 'category',
@@ -43,7 +42,6 @@ export const nikeApi = createApi({
                 body: { name, slug }
             }),
             invalidatesTags: ['Brand']
-
         }),
         getAllBrands: builder.query({
             query: () => 'brand',
@@ -70,6 +68,26 @@ export const nikeApi = createApi({
             query: () => 'product/all',
             providesTags: ['Product']
         }),
+        getFilteredProducts: builder.query({
+             query: (filters) => ({
+                url: 'product/filter',
+                params: filters,
+            }),
+            providesTags: ['Product']
+        }),
+        getProductById: builder.query({
+             query: (id) => ({
+                url: `product/${id}`
+            }),
+            providesTags: ['Product']
+        }),
+        getProductByCategoryId: builder.query({
+             query: (id) => ({
+                url: `product/category/${id}`
+            }),
+            providesTags: ['Product']
+        }),
+        
     })
 })
 
@@ -82,4 +100,7 @@ export const {
     useUploadImageMutation,
     useAddProductMutation,
     useGetAllProductsQuery,
+    useGetFilteredProductsQuery,
+    useGetProductByCategoryIdQuery,
+    useGetProductByIdQuery,
 } = nikeApi

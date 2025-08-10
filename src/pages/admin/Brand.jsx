@@ -7,7 +7,6 @@ import Modal from "../../components/ui/Modal"
 
 function Brand() {
   const [addOpen, setAddOpen] = useState(false)
-
   const { data: brands, isLoading, isError } = useGetAllBrandsQuery()
 
   
@@ -29,11 +28,10 @@ function Brand() {
 
   return (
     <div>
-      <h1>Brands</h1>
-      <button
-        className='cursor-pointer bg-black text-white '
-        onClick={() => setAddOpen(true)}
-        >Add brands</button>
+        <h1 className="text-5xl p-4">Brands</h1>
+        <button className='cursor-pointer bg-black text-white p-3 rounded-full' onClick={() => setAddOpen(true)}>
+            Add Brands
+        </button>
 
       <Modal open={addOpen} setOpen={setAddOpen}>
           <AddBrand open={addOpen} setOpen={setAddOpen} />
@@ -48,10 +46,10 @@ function Brand() {
                   >
                       <div>
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-lg">
+                            <div className="w-10 h-10 rounded-full bg-indigo-100  flex items-center justify-center font-bold text-lg">
                                 {index + 1}
                             </div>
-                            <span className="text-gray-800 font-medium text-lg group-hover:text-indigo-600 transition-colors duration-200">
+                            <span className="text-gray-800 font-medium text-lg transition-colors duration-200">
                                 {item?.name || 'No name'}
                             </span>
                         </div>

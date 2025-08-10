@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Accordion, AccordionSummary, AccordionDetails, Typography, } from "@mui/material"
+import { Accordion, AccordionSummary, AccordionDetails,  } from "@mui/material"
 import { SlArrowDown } from "react-icons/sl"
 import { TbWorld } from "react-icons/tb"
 import { Link } from "react-router"

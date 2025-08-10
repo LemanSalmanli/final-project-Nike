@@ -30,20 +30,11 @@ const NikeSidebar = () => {
 
   
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-64 bg-black text-white flex flex-col shadow-2xl">
-        {/* Logo */}
-        <div className="p-6 border-b border-gray-800">
-          <div className="flex items-center space-x-3">
-            <div className="bg-white text-black p-2 rounded-lg">
-              <Wind className="h-6 w-6" />
-            </div>
-            <span className="text-2xl font-bold tracking-wide">NIKE</span>
+    <div className="flex h-screen bg-gray-100 fixed">
+      <div className="w-64 bg-blue-100 text-white flex flex-col shadow-2xl">
+          <div className='p-8'>
+              <img className="h-5 w-15 " src="/img/Nike-logo.png" alt="Nike Logo" />
           </div>
-        </div>
-
-        {/* Navigation */}
         <nav className="flex-1 py-6">
           <ul className="space-y-2 px-4">
             <Link to="category"
@@ -61,25 +52,9 @@ const NikeSidebar = () => {
           </ul>
         </nav>
 
-        {/* User Profile & Logout */}
-        <div className="border-t border-gray-800 p-4">
-          <div className="flex items-center space-x-3 mb-4 px-2">
-            <div className="w-10 h-10 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full flex items-center justify-center">
-              <Star className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <div className="text-white font-medium">Admin User</div>
-              <div className="text-gray-400 text-sm">admin@nike.com</div>
-            </div>
-          </div>
-          
-          <button 
-            onClick={() => handleItemClick('logout')}
-            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
-              activeItem === 'logout'
-                ? 'bg-red-600 text-white'
-                : 'text-gray-300 hover:bg-red-600 hover:text-white'
-            }`}
+        <div className="border-t border-gray-800 text-black p-4">
+          <button className='cursor-pointer flex items-center'
+            onClick={() => localStorage.clear()}
           >
             <LogOut className="h-5 w-5" />
             <span className="font-medium">Logout</span>
