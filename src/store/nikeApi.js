@@ -73,21 +73,22 @@ export const nikeApi = createApi({
                 url: 'product/filter',
                 params: filters,
             }),
+            providesTags: ['Product'],
+            keepUnusedDataFor: 0
+        }),
+        getProductByCategoryId: builder.query({
+            query: (id) => ({
+                url: `product/category/${id}`
+            }),
             providesTags: ['Product']
         }),
+        
         getProductById: builder.query({
              query: (id) => ({
                 url: `product/${id}`
             }),
             providesTags: ['Product']
         }),
-        getProductByCategoryId: builder.query({
-             query: (id) => ({
-                url: `product/category/${id}`
-            }),
-            providesTags: ['Product']
-        }),
-        
     })
 })
 

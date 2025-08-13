@@ -8,6 +8,7 @@ function Category() {
   const [addOpen, setAddOpen] = useState(false)
   const { data: categories, isLoading, isError } = useGetAllCategoriesQuery()
 
+  console.log(categories);
   
     if (isLoading) {
         return (

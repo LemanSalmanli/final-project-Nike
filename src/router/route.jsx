@@ -12,6 +12,7 @@ import Men from "../pages/user/Men";
 import Women from "../pages/user/Women";
 import Kids from "../pages/user/Kids";
 import Products from "../pages/user/Products";
+import Details from "../pages/user/Details";
 
 export const router = createBrowserRouter(
     createRoutesFromElements(
@@ -23,6 +24,7 @@ export const router = createBrowserRouter(
                 <Route path="women" element={<Women />} />
                 <Route path="kids" element={<Kids />} />
                 <Route path="products" element={<Products />} />
+                <Route path="/details/:id" element={<Details />} />
             </Route>
             
             <Route path="/login" element={<Login />} />

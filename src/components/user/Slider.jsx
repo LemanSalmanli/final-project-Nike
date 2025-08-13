@@ -22,7 +22,7 @@ const Slider = () => {
       swiper.autoplay.start()
     }
     setIsPlaying(!isPlaying)
-  };
+  }
 
   return (
     <div>

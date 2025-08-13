@@ -66,7 +66,7 @@ function Header() {
                                                                 <div className="flex flex-col gap-1 pl-2 border-l border-gray-100">
                                                                     {child.children.map((subChild) => (
                                                                         <Link 
-                                                                            to={`/products?category=${item.id}&childCategory=${child.id}&subChildcategory=${subChild.id}`}
+                                                                            to={`/products?category=${item.id}&childCategory=${child.id}&subChildCategory=${subChild.id}`}
                                                                             key={subChild.id}
                                                                             className="text-sm hover:underline cursor-pointer text-gray-600 hover:text-black block py-1"
                                                                         >

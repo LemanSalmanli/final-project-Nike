@@ -7,12 +7,13 @@
   -ms-overflow-style: none; 
   scrollbar-width: none; 
 }
-.scrollbar-hide::-webkit-scrollbar {
-  display: none;
-}
+
 .group-hover-scrollbar::-webkit-scrollbar {
   display: block !important;
 }
-*{
-  font-family: Arial, Helvetica, sans-serif;
+* {
+  font-family: "Helvetica Now Text", Helvetica, Arial, sans-serif;
+}
+.black-text{
+  color: #111111;
 }
