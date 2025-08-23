@@ -1,5 +1,6 @@
+import { colorClasses } from "../../data/colors";
 
-function FilterBar({listByPrice, allBrands, allColors, allSizes, colorClasses, filters, setFilters, setOpenFilter}) {
+function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFilters, setOpenFilter}) {
    
     function toggleFilter(field, value) {
         setFilters(prev => {

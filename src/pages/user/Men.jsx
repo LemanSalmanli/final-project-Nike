@@ -28,7 +28,7 @@ function Men() {
                 </div>
             </div>
             <div className="relative w-full sm:h-[40vh] lg:h-[100vh] overflow-hidden">
-                <video className="w-full   object-cover"  controls autoPlay muted loop>
+                <video className="w-full object-cover"  controls autoPlay muted loop>
                     <source src="/videos/segment0.mp4" type="video/mp4" />
                     Your browser does not support the video tag.
                 </video>

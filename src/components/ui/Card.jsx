@@ -14,8 +14,8 @@ function Card({item}) {
             </div>
             <div className=" lg:group-hover:hidden text-[14px] font-[500] px-4">
                 <h3 className="text-[#111111]">{item?.name}</h3>
-                <p className="text-gray-600">{item?.category.name} {}</p>
-                <p className="text-gray-600">{item?.colors.length} Colors</p>
+                <p className="text-gray-600">{item?.category?.name} {}</p>
+                <p className="text-gray-600">{item?.colors?.length} Colors</p>
             </div>
             <div className="px-4">
                 <div className="gap-2 bg-white z-10 hidden lg:group-hover:flex">

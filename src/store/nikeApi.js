@@ -14,7 +14,7 @@ export const nikeApi = createApi({
             return headers
         }
     }),
-    tagTypes: ['Category', 'Brand', 'Product', 'Image'],
+    tagTypes: ['Category', 'Brand', 'Product', 'Image', 'Basket'],
     endpoints: (builder) => ({
         login: builder.mutation({
             query: ({ email, password }) => ({
@@ -28,6 +28,13 @@ export const nikeApi = createApi({
                 method: 'post',
                 url: 'category',
                 body: { name, slug, parentId }
+            }),
+            invalidatesTags: ['Category']
+        }),
+        deleteCategory: builder.mutation({
+            query: (id) => ({
+                method: 'delete',
+                url: `category/${id}`,
             }),
             invalidatesTags: ['Category']
         }),
@@ -82,19 +89,39 @@ export const nikeApi = createApi({
             }),
             providesTags: ['Product']
         }),
-        
         getProductById: builder.query({
              query: (id) => ({
                 url: `product/${id}`
             }),
             providesTags: ['Product']
         }),
+         addToBasket: builder.mutation({
+            query: ({ id, color, size, quantity }) => ({
+                url: `basket/${id}`,
+                method: 'POST',
+                body: { color, size, quantity },
+            }),
+            invalidatesTags: ['Basket'],
+        }),
+        deleteFromBasket: builder.mutation({
+            query: (basketItemId) => ({
+                url: `basket/${basketItemId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Basket'],
+        }),
+        getBasketItems: builder.query({
+            query: () => 'basket',
+            providesTags: ['Basket']
+        }),
+
     })
 })
 
 export const {
     useLoginMutation,
     useAddCategoryMutation,
+    useDeleteCategoryMutation,
     useGetAllCategoriesQuery,
     useAddBrandMutation,
     useGetAllBrandsQuery,
@@ -104,4 +131,7 @@ export const {
     useGetFilteredProductsQuery,
     useGetProductByCategoryIdQuery,
     useGetProductByIdQuery,
+    useAddToBasketMutation,
+    useDeleteFromBasketMutation,
+    useGetBasketItemsQuery
 } = nikeApi

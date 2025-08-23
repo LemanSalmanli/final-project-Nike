@@ -39,14 +39,14 @@ function AddCategory({open, setOpen}) {
         <div>
             <h1>Add Category</h1>
             <Formik
-            key={formKey}
-                initialValues={{
-                    name: '',
-                    slug: '',
-                    parentId: ''
-                }}
-                validationSchema={validationSchema}
-                onSubmit={handleSaveCategory}
+                key={formKey}
+                    initialValues={{
+                        name: '',
+                        slug: '',
+                        parentId: ''
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={handleSaveCategory}
             >
             {() => (
                 <Form className="flex flex-col gap-4">
