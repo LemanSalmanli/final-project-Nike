@@ -8,10 +8,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Loader2 } from 'lucide-react';
-import { CiHeart } from 'react-icons/ci';
 import { colorClasses } from '../../data/colors';
 import * as Yup from 'yup'
-import { Form, ErrorMessage, Field, Formik, useFormikContext } from 'formik';
+import { Form, ErrorMessage, Field, Formik } from 'formik';
+import { FaHeart } from 'react-icons/fa6';
+import { CiHeart } from 'react-icons/ci';
+import { FiLoader } from 'react-icons/fi';
 
 const validationSchema = Yup.object({
     color: Yup.string().required("Please select a color"),
@@ -25,8 +27,15 @@ function Details() {
     const [activeIndex, setActiveIndex] = useState(0) 
     const [openDetails, setOpenDetails] = useState(false)
     const [addedToBasket, setAddedToBasket] = useState(false)
-    const [selectedColor, setSelectedColor] = useState("");
-    const [selectedSize, setSelectedSize] = useState("");
+    const [addedToFavs, setAddedToFavs] = useState(false)
+    const [selectedColor, setSelectedColor] = useState("")
+    const [selectedSize, setSelectedSize] = useState("")
+    const [isFavorite, setIsFavorite] = useState(false)
+
+    useEffect(() => {
+        const favorites = JSON.parse(localStorage.getItem("favorites")) || []
+        setIsFavorite(favorites.includes(+id))
+    }, [id])  
 
     const [addToBasket, { isLoading: isAdding }] = useAddToBasketMutation()
 
@@ -39,34 +48,49 @@ function Details() {
                 quantity: 1,
             }).unwrap()
             window.scrollTo({ top: 0, behavior: 'smooth' })
-
             setAddedToBasket(true)
         } catch (error) {
             console.error("Failed to add to basket:", error)
         } finally {
-        setSubmitting(false)
+            setSubmitting(false)
         }
     }
 
-    useEffect(() => {
-        if (addedToBasket) {
-            document.body.style.overflow = 'hidden'
+    function handleFavorite(productId) {
+        let favorites = JSON.parse(localStorage.getItem("favorites")) || []
+        if (favorites.includes(productId)) {
+            favorites = favorites.filter((id) => id !== productId)
+            setIsFavorite(false)
+        } else {
+            favorites.push(productId)
+            setIsFavorite(true)
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            setAddedToFavs(true)
+            setTimeout(() => setAddedToFavs(false), 15000)
+        }
+        localStorage.setItem("favorites", JSON.stringify(favorites))
+    }
 
+    
+    useEffect(() => {
+        if (addedToBasket || addedToFavs) {
+            document.body.style.overflow = 'hidden'
             const timer = setTimeout(() => {
                 setAddedToBasket(false)
             }, 15000)
 
             return () => {
-                clearTimeout(timer);
+                clearTimeout(timer)
                 document.body.style.overflow = 'auto'
             }
         } else {
             document.body.style.overflow = 'auto'
         }
-    }, [addedToBasket])
+    }, [addedToBasket, addedToFavs])
 
+    
 
-    if (isLoading) return <Loader2 />
+    if (isLoading) return  <div className="py-8 flex items-center justify-center"><FiLoader className="animate-spin w-15 h-15" /></div>
     if (isError) return <p>Error loading product</p>
 
   return (
@@ -205,7 +229,7 @@ function Details() {
                                     className="text-red-500 text-sm"
                                 />
                             </div>
-                            <div className='py-4 flex flex-col gap-4'> 
+                            <div className='py-4'> 
                                 <button 
                                     type="submit"
                                     disabled={isAdding} 
@@ -213,13 +237,19 @@ function Details() {
                                 > 
                                     {isAdding ? "Adding..." : "Add to Bag"} 
                                 </button> 
-                                <button className='flex gap-2 items-center justify-center text-black bg-white border border-gray-300 hover:border-black text-base font-medium py-4 cursor-pointer w-full rounded-4xl'> 
-                                    Favorite <CiHeart className='text-2xl' /> 
-                                </button> 
                             </div>
                         </Form>
                     )}
                 </Formik>
+                <div>
+                    <button onClick={()=> handleFavorite(item?.id)} className='flex gap-2 items-center justify-center text-black bg-white border border-gray-300 hover:border-black text-base font-medium py-4 cursor-pointer w-full rounded-4xl'> 
+                        {isFavorite ? (
+                            <span className='flex items-center gap-3 text-lg'>Favorited <FaHeart className="text-xl" /></span>
+                        ) : (
+                            <span className='flex items-center gap-3 text-lg'>Favorite <CiHeart className="text-xl" /></span>
+                        )}                    
+                    </button> 
+                </div>
                 <div className='black-text space-y-8 py-6'> 
                     <div> 
                         <h3 className='font-semibold'>Shipping</h3> 
@@ -273,11 +303,9 @@ function Details() {
                     </div>
 
                 </div>
-
-
             </div>
         </div>
-        {addedToBasket && (
+        {addedToBasket &&  (
             <div className="fixed inset-0 z-50 lg:absolute">
                 <div
                     className="absolute inset-0 bg-[#1111115C]"
@@ -295,10 +323,10 @@ function Details() {
                     <div className="flex gap-4">
                         <img src={item?.images[0]?.url} alt="Item" className="h-32 lg:h-24 rounded-lg object-cover" />
                         <div>
-                        <h3 className="font-semibold">{item?.name}</h3>
-                        <p>Size: {selectedSize}</p>
-                        <p>Color: {selectedColor}</p>
-                        <p>${Number(item?.price).toFixed(0)}</p>
+                            <h3 className="font-semibold">{item?.name}</h3>
+                            <p>Size: {selectedSize}</p>
+                            <p>Color: {selectedColor}</p>
+                            <p>${Number(item?.price).toFixed(0)}</p>
                         </div>
                     </div>
 
@@ -312,6 +340,39 @@ function Details() {
                     </div>
                 </div>
             </div>
+        )}
+
+        {addedToFavs && (
+            <div className="fixed inset-0 z-50 lg:absolute">
+                <div
+                    className="absolute inset-0 bg-[#1111115C]"
+                    onClick={() => setAddedToFavs(false)}
+                ></div>
+                <div className="fixed bottom-0 left-0 w-full h-[50%] lg:absolute lg:top-0 lg:right-16 lg:left-auto lg:w-[30%] lg:h-[20%] rounded-t-4xl lg:rounded-t-none lg:rounded-b-4xl bg-white shadow-lg p-6 space-y-8 lg:space-y-4">
+                    <div className="flex justify-between items-center">
+                        <div className="flex gap-3 items-center">
+                        <div className="w-5 h-5 bg-green-600 text-white flex items-center justify-center rounded-full p-1">✔</div>
+                        <span>Added to Favorites</span>
+                        </div>
+                        <button className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-300 cursor-pointer" onClick={() => setAddedToFavs(false)}>✖</button>
+                    </div>
+
+                    <div className="flex gap-4">
+                        <img src={item?.images[0]?.url} alt="Item" className="h-32 lg:h-24 rounded-lg object-cover" />
+                        <div>
+                            <h3 className="font-semibold">{item?.name}</h3>
+                            <p className="text-[#707072] text-base">{item?.category.name} {}</p>
+                            <p>${Number(item?.price).toFixed(0)}</p>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4">
+                        <Link to="/favorites" className="border text-center bg-black text-white py-4 rounded-4xl">
+                            View Favorites
+                        </Link>
+                    </div>
+                </div>
+            </div> 
         )}
 
    </div>

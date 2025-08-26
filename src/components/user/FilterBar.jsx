@@ -85,8 +85,9 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 id="mxPrice25-radio"  
                                 name="price-list" 
                                 type="radio" 
+                                checked={filters.minPrice === 1 && filters.maxPrice === 25}
                                 value="" 
-                                className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0" 
+                                className={` ${(filters.minPrice === 1 && filters.maxPrice === 25) ? 'bg-black' : 'bg-white'} w-5 h-5 text-xl  border-black rounded-sm focus:ring-0`} 
                             />
                             <label htmlFor="mxPrice25-radio" className="cursor-pointer">$0 - $25</label>
                         </div>
@@ -105,6 +106,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 name="price-list" 
                                 type="radio" 
                                 value="" 
+                                checked={filters.minPrice === 25 && filters.maxPrice === 50}
                                 className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0" 
                             />
                             <label htmlFor="mxPrice50-radio" className="cursor-pointer">$25 - $50</label>
@@ -123,6 +125,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 id="mxPrice100-radio" 
                                 name="price-list" 
                                 type="radio" 
+                                checked={filters.minPrice === 50 && filters.maxPrice === 100}
                                 value="" 
                                 className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0" 
                             />
@@ -142,6 +145,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 id="mxPrice150-radio" 
                                 name="price-list" 
                                 type="radio" 
+                                checked={filters.minPrice === 100 && filters.maxPrice === 150}
                                 value="" 
                                 className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0"
                             />
@@ -161,6 +165,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 id="minPrice150-radio" 
                                 name="price-list" 
                                 type="radio" 
+                                checked={filters.minPrice === 150 && filters.maxPrice === 5000}
                                 value="" 
                                 className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0" 
                             />
@@ -177,6 +182,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                             <input
                                 id={`${size}-checkbox`}
                                 type="checkbox"
+                                checked={filters.sizes.includes(size)}
                                 onChange={() => toggleFilter("sizes", size)}
                                 className="hidden peer"
                             />
@@ -201,6 +207,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 }}                                 
                                 id="anybrand-radio" 
                                 type="radio" 
+                                checked={filters.brandId === null}
                                 name="brand-selection"
                                 value="anybrand" 
                                 className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0 cursor-pointer" 
@@ -221,6 +228,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                                 }} 
                                     id={`${brand.name}-radio`} 
                                     type="radio" 
+                                    checked={filters.brandId === brand.id}
                                     name="brand-selection"
                                     value={brand.name} 
                                     className="w-5 h-5 text-xl text-black bg-white border-black rounded-sm focus:ring-0 cursor-pointer" 
@@ -231,7 +239,7 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                     )}
                 </ul>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between lg:hidden">
                 <button onClick={() => {
                         setFilters({
                             brandId: null,
@@ -242,11 +250,11 @@ function FilterBar({listByPrice, allBrands, allColors, allSizes, filters, setFil
                         })
                         setOpenFilter(false)
                     }} 
-                    className="flex gap-2 items-center text-lg bg-white text-black  cursor-pointer  border border-gray-300 py-0.5 px-5 rounded-3xl">
+                    className="w-[50%] text-center text-lg bg-white text-black  cursor-pointer  border border-gray-300 py-0.5 px-5 rounded-3xl">
                     Clear 
                 </button>
                 <button onClick={() => setOpenFilter(false)}
-                    className="flex gap-2 items-center text-lg bg-black text-white  cursor-pointer  py-0.5 px-5 rounded-3xl">
+                    className="w-[50%] text-center text-lg bg-black text-white  cursor-pointer  py-0.5 px-5 rounded-3xl">
                     Apply 
                 </button>
             </div>

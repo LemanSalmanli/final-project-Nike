@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { AiOutlineMenu } from "react-icons/ai"
 import { CiHeart } from "react-icons/ci"
-import { FiUser } from "react-icons/fi"
+import { FiHeart, FiUser } from "react-icons/fi"
 import { HiMagnifyingGlass } from "react-icons/hi2"
 import { IoBagOutline } from "react-icons/io5"
 import { Link } from "react-router"
-import { useGetAllCategoriesQuery, useGetAllProductsQuery } from "../../store/nikeApi"
+import { useGetAllCategoriesQuery, useGetAllProductsQuery, useGetBasketItemsQuery } from "../../store/nikeApi"
 import { FaAngleLeft, FaChevronRight } from "react-icons/fa6";
 import { RxCross1 } from "react-icons/rx";
 
@@ -18,7 +18,7 @@ function Header() {
     const [searchInput, setSearchInput] = useState("")
     const [searchedData, setSearchedData] = useState([])
     const { data: allProducts, isLoading, isError } = useGetAllProductsQuery()
-
+    const { data: basketProducts } = useGetBasketItemsQuery()
     
     useEffect(() => {
         if (categories) {
@@ -110,11 +110,20 @@ function Header() {
                     <div className="flex justify-self-end justify-end w-fit">
                         <div onClick={() => setOpenSearch(true)} className="xl:bg-[#F5F5F5] rounded-full flex overflow-hidden xl:w-[50%]">
                             <button  className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer"><HiMagnifyingGlass /></button>
-                            <input value='' className="hidden xl:flex outline-none border-0 focus:border-0 focus:ring-0 appearance-none bg-[#F5F5F5] px-2" type="text" placeholder="Search" />                        
+                            <input onChange={(e) => setSearchInput(e.target.value)} value='' className="hidden xl:flex outline-none border-0 focus:border-0 focus:ring-0 appearance-none bg-[#F5F5F5] px-2" type="text" placeholder="Search" />                        
                         </div>                
                         <button className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer lg:hidden"><FiUser /></button>
-                        <button className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer hidden lg:flex"><CiHeart /></button>
-                        <Link to={"/basket"} className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer" ><IoBagOutline /></Link>
+                        <Link to={"/favorites"} className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer hidden lg:flex">
+                            <FiHeart />
+                        </Link>
+                        <Link to={"/basket"} className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer relative">
+                            <IoBagOutline />
+                            <span className="absolute text-xs right-3.5 top-3.5">
+                                {basketProducts && basketProducts.length > 0
+                                    ? basketProducts[0].totalItems
+                                    : ''}
+                            </span>
+                        </Link>
                         <button onClick={() => setOpenMenu(true)} className="hover:bg-gray-200 rounded-full p-2 text-2xl cursor-pointer lg:hidden"><AiOutlineMenu /></button>
                     </div>
                 </div>
@@ -174,7 +183,7 @@ function Header() {
 
             {openSearch && (
                 <div>
-                    <div className="fixed top-0  w-full min-h-1/5 h-fit bg-white shadow-lg p-4 transition-all duration-600 ease-in-out z-50">
+                    <div className="fixed top-0  w-full min-h-1/5 h-fit bg-white shadow-lg p-4 transition-all duration-600 ease-in-out z-70">
                         <div className="flex justify-between px-4">
                              <div>
                                 <img className="h-8" src="/img/Nike-logo.png" alt="Nike Logo" />
@@ -213,7 +222,7 @@ function Header() {
                         </div>
                     </div>
                     <button
-                        className="fixed inset-0 bg-[#1111115C] z-40"
+                        className="fixed inset-0 bg-[#1111115C] z-60"
                         onClick={() => {
                             setOpenSearch(false)
                             setSearchInput('')

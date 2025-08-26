@@ -95,7 +95,7 @@ export const nikeApi = createApi({
             }),
             providesTags: ['Product']
         }),
-         addToBasket: builder.mutation({
+        addToBasket: builder.mutation({
             query: ({ id, color, size, quantity }) => ({
                 url: `basket/${id}`,
                 method: 'POST',

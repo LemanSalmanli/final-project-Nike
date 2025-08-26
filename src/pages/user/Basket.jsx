@@ -1,30 +1,40 @@
 import { CiTrash } from "react-icons/ci";
 import { useAddToBasketMutation, useDeleteFromBasketMutation, useGetBasketItemsQuery } from "../../store/nikeApi"
-import { Loader2 } from "lucide-react";
 import { FaQuestionCircle, FaRegHeart } from "react-icons/fa";
 import { FiLoader, FiMinus, FiPlus } from "react-icons/fi";
 import { Link } from "react-router";
 import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SlArrowDown } from "react-icons/sl";
 
 function Basket() {
-
-    const [expanded, setExpanded] = useState(true)
     
+    const {data: basketData, isLoading, isError} = useGetBasketItemsQuery() 
+    const [orderedItems, setOrderedItems] = useState([])
+    
+    const [addToBasket] = useAddToBasketMutation()
+    const [deleteFromBasket] = useDeleteFromBasketMutation()
+    
+    const [expanded, setExpanded] = useState(true)
     const handleAccChange = (panel) => (newExpanded) => {
         setExpanded(newExpanded ? panel : false)
     }
     
-    const {data: basketData, isLoading, isError} = useGetBasketItemsQuery()    
-    const [addToBasket] = useAddToBasketMutation()
-    const [deleteFromBasket] = useDeleteFromBasketMutation()
-    
-    if (isLoading) return <div className="py-8 flex items-center justify-center"><FiLoader className="animate-spin w-15 h-15" /></div>
-    if (!basketData || basketData.length === 0) return <div className="py-8 flex items-center justify-center text-xl"><p>Your basket is empty</p></div>
-    
-    
-    const basket = basketData[0]
+    useEffect(() => {
+        if (basketData?.[0]?.items) {
+            setOrderedItems((prev) => {
+                if (prev.length === 0) {
+                    return basketData[0]?.items
+                }
+                return prev.map(item => {
+                    const updated = basketData[0]?.items?.find(
+                        i => i.product.id === item.product.id && i.color === item.color && i.size === item.size
+                    )
+                    return updated || item
+                })
+            })
+        }
+    }, [basketData])
     
     const handleQuantityChange = async (item, changeAmount) => {
         try {
@@ -33,27 +43,36 @@ function Basket() {
                 color: item?.color,
                 size: item?.size,
                 quantity: changeAmount
-            }).unwrap()
+            }).unwrap()            
         } catch (error) {
             console.error("Failed to update basket:", error);
         }
     }
     
-    function handleDelete(basketItemId) {
-        deleteFromBasket(basketItemId)
+   async function handleDelete(basketItemId) {
+       try {
+           await deleteFromBasket(basketItemId).unwrap()
+            setOrderedItems(prev => prev.filter(item => item.id !== basketItemId))
+        } catch (error) {
+            console.error("Failed to delete item:", error)
+        }
     }
+    
+    if (isLoading) return <div className="py-8 flex items-center justify-center"><FiLoader className="animate-spin w-15 h-15" /></div>
+    if (!basketData || basketData?.length === 0) return <div className="py-8 flex items-center justify-center text-xl"><p>Your basket is empty</p></div>
+    
     
     return (
         <div className="px-6">
             <div className="py-12 text-center lg:hidden">
                 <h2 className="text-2xl  font-medium">Bag</h2>
-                <p className="text-[#707072] lg:hidden">{basket?.totalItems} Items | <span className="text-[#111111]">${basket?.totalPrice}.00</span></p>
+                <p className="text-[#707072] lg:hidden">{basketData[0]?.totalItems} Items | <span className="text-[#111111]">${basketData[0]?.totalPrice}.00</span></p>
             </div>
             <div className="lg:flex justify-between items-start lg:w-[75%] m-auto gap-8">
                 <div className="lg:w-[65%]">
                     <h2 className="text-2xl font-semibold hidden lg:block mt-8">Bag</h2>
                     <ul className=" border-t border-gray-300 lg:border-0">
-                        {basket?.items?.map((item, index) => (
+                        {orderedItems?.map((item, index) => (
                             <li key={`${item?.product?.id}-${item?.color}-${item?.size}`} className=" py-8 border-b border-gray-300 space-y-8">
                                 <div className="flex gap-4 ">
                                     <div className="space-y-4">
@@ -121,7 +140,7 @@ function Basket() {
                     <div className="space-y-4">
                         <div className="flex items-center justify-between black-text">
                             <h2 className="flex items-center gap-2">Subtotal <span><FaQuestionCircle /></span></h2>
-                            <span>${basket?.totalPrice}.00</span>
+                            <span>${basketData[0]?.totalPrice}.00</span>
                         </div>
                         <div className="flex items-center justify-between black-text">
                             <h2>Estimated Shipping & Handling</h2>
@@ -133,7 +152,7 @@ function Basket() {
                         </div>
                         <div className="flex items-center justify-between text-lg black-text py-4 lg:border-y border-gray-300">
                             <h2>Total</h2>
-                            <span>${basket?.totalPrice}.00</span>
+                            <span>${basketData[0]?.totalPrice}.00</span>
                         </div>
                     </div>
                 </div>

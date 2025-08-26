@@ -5,14 +5,14 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router";
 import FilterBar from "../../components/user/FilterBar";
 import { Loader2 } from "lucide-react";
+import { FiLoader } from "react-icons/fi";
 
 
 function Products() {
     const [openFilter, setOpenFilter] = useState(false)
-    const [filterButton, setFilterButton] = useState(false)
     const [hideFilterBar, setHideFilterBar] = useState(false)
-
     const [searchParams] = useSearchParams()
+
     const subChildCategoryId = searchParams.get("subChildCategory")
     const childCategoryId = searchParams.get("childCategory")
     const categoryId = searchParams.get("category")
@@ -26,18 +26,15 @@ function Products() {
         maxPrice: null,
     })
 
-    const {data: brandProducts, isLoading: brandLoading, isError} = useGetFilteredProductsQuery(
+    const { data: products, isLoading: loading, isError: error } = useGetProductByCategoryIdQuery(+subChildCategoryId)
+
+    const {data: brandProducts, isLoading: brandLoading, isError: brandError} = useGetFilteredProductsQuery(
         { brandId: brand }, 
         { skip: !brand }
-
     )
+    const baseProducts = brand ? brandProducts : products
 
-    console.log(brandProducts);
-    
-    const { data: products, isLoading: loading, isError: error } = useGetProductByCategoryIdQuery(+subChildCategoryId)
-    
-    
-    const { data: productsByFilter, isLoading: filterLoading } = useGetFilteredProductsQuery(filters, {
+    const { data: productsByFilter, isLoading: filterLoading, isError: isFilterError } = useGetFilteredProductsQuery(filters, {
         skip: !filters.brandId && 
         filters.colors.length === 0 && 
         filters.sizes.length === 0 && 
@@ -53,7 +50,6 @@ function Products() {
     const childCategory = parentCategory?.children?.find(item => item.id === +childCategoryId)
     const subChildCategory = childCategory?.children?.find(item => item.id === +subChildCategoryId)
 
-    const baseProducts = brand ? brandProducts : products
 
         
     const allColors = baseProducts?.reduce((acc, product) => {
@@ -82,12 +78,21 @@ function Products() {
     }, []) || []
 
 
-    
+    useEffect(() => {
+        if (openFilter) {
+            document.body.style.overflow = "hidden"
+        } else {
+            document.body.style.overflow = "auto"
+        }
+        return () => {
+            document.body.style.overflow = "auto"
+        }
+    }, [openFilter])
+
     useEffect(() => {
         if (!baseProducts) return
-
         let filtered = []
-        
+    
         const hasFilters =
             filters.brandId ||
             filters.colors.length > 0 ||
@@ -152,7 +157,7 @@ function Products() {
                     </button>
                 </div>
             </div>
-            <div className="lg:px-12 flex w-full">
+            <div className="lg:px-12 flex w-full gap-4">
                 {!hideFilterBar && (
                     <div className="sticky top-0 z-50 bg-white hidden lg:block w-[20%] h-[100vh] overflow-y-scroll">
                         <FilterBar 
@@ -165,15 +170,16 @@ function Products() {
                         />
                     </div>
                 )}
-    
-                <div className={`grid grid-cols-2 lg:grid-cols-3 gap-1.5 lg:gap-4 ${!hideFilterBar ? 'lg:w-[80%]' : 'w-full'}`}>
-                    {(loading || filterLoading|| brandLoading) ? <Loader2 /> : 
-                        filteredProducts.length > 0  ? (
+                <div className={`grid grid-cols-2 lg:grid-cols-3 gap-1.5 lg:gap-4 w-full ${!hideFilterBar ? 'lg:w-[80%]' : 'w-full'} px-4`}>
+                    {(isFilterError || brandError || filteredProducts.length === 0 ) ?  
+                        <div className="text-center text-lg w-full"><p>No products found.</p></div> 
+                        : (
+                            loading || brandLoading || filterLoading ) ? 
+                                <div className="py-8 flex items-center justify-center w-full"><FiLoader className="animate-spin w-15 h-15" /></div>
+                        : (
                             filteredProducts.map((item) => 
-                                <Card item={item} key={item.id} />                    
-                            ) 
-                        ) : (
-                            <div>No found</div>
+                                <Card item={item} key={item.id} />  
+                        ) 
                     )}
                 </div>
             </div>
